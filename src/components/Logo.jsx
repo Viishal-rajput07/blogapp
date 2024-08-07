@@ -1,9 +1,11 @@
 import React from 'react'
+import blogLogo from '../assets/logo.svg'
+
 
 function Logo({width='100px'}) {
   return (
     <div width={width}>
-      <img src="/logo.png" alt="Logo" />
+      <img src={blogLogo} alt="Logo" />
     </div>
   )
 }

@@ -45,7 +45,7 @@ function Post() {
                     />
 
                     {isAuthor && (
-                        <div className="fixed right-6 top-20">
+                        <div className="fixed right-6 top-24">
                             <Link to={`/edit-post/${post.$id}`}>
                                 <Button bgColor="bg-green-500" className="mr-3">
                                     Edit
