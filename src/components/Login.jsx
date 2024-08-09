@@ -9,7 +9,7 @@ import { Logo, Button, Input } from "./index";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit,  formState: {errors}} = useForm();
   const [error, setError] = useState("");
 
   const login = async (data) => {
@@ -21,8 +21,12 @@ function Login() {
         if (userData) dispatch(authLogin(userData));
         navigate("/");
       }
+      else {
+        // Handle case where session is not returned but no error was thrown
+        setError("Login failed. Please check your email and password and try again.");
+      }
     } catch (error) {
-      setError(error.message);
+       setError(error)
     }
   };
   return (
@@ -57,7 +61,7 @@ function Login() {
               placeholder="Enter your Email"
               type="email"
               {...register("email", {
-                required: true,
+                required: "Email is required",
                 validate: {
                   matchPatern: (value) =>
                     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
@@ -65,6 +69,11 @@ function Login() {
                 },
               })}
             />
+            {errors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
 
             <Input
             
@@ -72,9 +81,14 @@ function Login() {
               type="password"
               placeholder="Enter your password"
               {...register("password", {
-                required: true,
+                required:  "Password is required"             
               })}
             />
+            {errors.password && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
 
             <Button type="submit" className="w-full">
               Sign In
