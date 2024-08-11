@@ -9,7 +9,12 @@ import { Logo, Button, Input } from "./index";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit,  formState: {errors}} = useForm();
+  const { register, handleSubmit,  formState: {errors}} = useForm({
+    defaultValues: {
+        email: " ",
+        password: "", 
+    },
+});
   const [error, setError] = useState("");
 
   const login = async (data) => {

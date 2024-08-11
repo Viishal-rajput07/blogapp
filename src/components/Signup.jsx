@@ -27,7 +27,7 @@ function Signup() {
         setError("Signup failed: Please Check user details")
       }
     } catch (error) {
-      setError(error.message);
+      setError(error);
     }
   };
   return (

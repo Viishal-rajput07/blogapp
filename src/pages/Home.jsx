@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import service from '../appwrite/config'
 import { Container, PostCard, Loader } from '../components'
+import  {useSelector} from 'react-redux'
+
 
 function Home() {
+
+    const authStatus = useSelector((state) => state.auth.status)
 
     const[loading, setLoading] = useState(true)
     const [posts, setPosts] = useState([])
@@ -21,7 +25,7 @@ function Home() {
             <Loader />
         )
     }
-    else if (posts.length === 0 )  {
+    else if (posts.length === 0 || authStatus === false)  {
         return (
             <div className="w-full py-8 mt-4 text-center">
                 <Container>
