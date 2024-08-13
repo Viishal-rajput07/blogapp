@@ -1,15 +1,17 @@
-import React, { useCallback, useEffect } from 'react'
+import React, {useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Button, Input, RTE, Select } from '..'
+import { Button, Input, RTE, Select, Loader } from '..'
 import service from '../../appwrite/config'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 
 
+
 export default function PostForm({ post }) {
 
-    const { register, handleSubmit, watch, setValue, getValues, control } = useForm({
+
+    const { register, handleSubmit, watch, setValue, getValues, control, formState: {errors} } = useForm({
         defaultValues: {
             title: post?.title || "",
             slug: post?.$id || "",
@@ -18,10 +20,12 @@ export default function PostForm({ post }) {
         },
     })
 
+    const[waiting, setWaiting] = useState(false)
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
 
     const submit = async (data) => {
+        setWaiting(true)
         try {
             let fileId;
             if (data.image?.[0]) {
@@ -64,6 +68,9 @@ export default function PostForm({ post }) {
         } catch (error) {
             console.error('Error submitting form:', error);
         }
+        finally{
+            setWaiting(false);
+        }
         
     };
 
@@ -96,8 +103,14 @@ export default function PostForm({ post }) {
                     label="Title :"
                     placeholder="Title"
                     className="mb-4"
-                    {...register("title", { required: true })}
+                    {...register("title", { required: "Title is required" })}
                 />
+                {errors.title && (
+                    <p className="text-red-600 mb-2">
+                        {errors.title.message}
+                    </p>
+                )}
+    
                 <Input
                     label="Slug :"
                     placeholder="Slug"
@@ -107,7 +120,12 @@ export default function PostForm({ post }) {
                         setValue('slug', slugTransform(e.currentTarget.value), { shouldValidate: true })
                     }}
                 />
-                <RTE label='content :' name="description" control={control} defaultValue={getValues('description')} />
+                <RTE {...register("description", { required:  "content is required"})} label='content :' name="description" control={control} defaultValue={getValues('description')} />
+                {errors.description && (
+                  <p className="text-red-600 mb-2">
+                     {errors.description.message}
+                 </p>
+                )}
             </div>
             <div className="w-1/3 px-2">
                 <Input
@@ -115,8 +133,13 @@ export default function PostForm({ post }) {
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
+                    {...register("image", { required: !post ? "Image is required" : false })}
                 />
+                {errors.image && (
+                  <p className="text-red-600 mb-2">
+                     {errors.image.message}
+                 </p>
+                )}
                 {post && (
                     <div className="w-full mb-4">
                         <img
@@ -135,6 +158,9 @@ export default function PostForm({ post }) {
                 <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
                     {post ? "Update" : "Submit"}
                 </Button>
+                {waiting ? <div className='mt-5 gap-2 flex text-bold'>wait for a second your post is {post ? "updating" :"uploading"}{"  "}<p className=" loading loading-dots loading-sm"></p> </div>: null}
+                
+                
             </div>
         </form>
     ) 

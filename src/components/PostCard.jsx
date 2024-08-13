@@ -34,7 +34,7 @@ function PostCard({ $id, title, image, description }) {
           <div className='w-64'>{parse(shortenedDescription)}</div>
           <div className="card-actions justify-end absolute bottom-2 right-2">
             
-            <button className="btn btn-sm btn-primary hover:bg-blue-700">Visit Post</button>
+            <button className="btn btn-sm btn-primary duration-200 hover:bg-blue-600 ">Visit Post</button>
           </div>
         </div>
       </div>
